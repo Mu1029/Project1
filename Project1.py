@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
+from mpl_toolkits.mplot3d import Axes3D
+
 
 # dependant variable is the step #, independant variables are the coordinates (X,Y,Z)
 
@@ -21,10 +23,8 @@ df = pd.read_csv(data)
 print('\n', 'Data info: ', '\n')
 print(df.info(), '\n')
 
-print(df.head(),'\n')
-print(df.tail(),'\n')
-
 total = np.sum(df)
+print('Value Sums: ', '\n')
 print(total, '\n')
 
 print('Stat Summary: ', '\n')
@@ -35,25 +35,25 @@ print(df.describe())
 
 x = df['X']
 y = df['Step']
-plt.plot(x, y)
+plt.scatter(x, y)
 plt.grid()
 
 plt.xlabel('X')
 plt.ylabel('Step #')
-plt.title('X vs Step')
+plt.title('X vs Step (Scatter)')
 
-x = df['Y']
-y = df['Step']
-plt.plot(x, y)
+x2 = df['Y']
+y2 = df['Step']
+plt.scatter(x2, y2)
 plt.grid()
 
 plt.xlabel('Y')
 plt.ylabel('Step #')
-plt.title('Y vs Step')
+plt.title('Y vs Step (Scatter)')
 
-x = df['Z']
-y = df['Step']
-plt.scatter(x, y)
+x3 = df['Z']
+y3 = df['Step']
+plt.scatter(x3, y3)
 plt.grid()
 
 plt.xlabel('Z')
@@ -67,9 +67,17 @@ plt.ylabel('Frequency')
 plt.title('Histogram')
 plt.legend(['X', 'Y', 'Z', 'Step'])
 
+ax = plt.figure().add_subplot(111, projection='3d')
+x4 = df['X']
+y4 = df['Y']
+z = df['Z']
 
+ax.scatter(x4, y4, z, s=2)
 
-
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_zlabel('Z')
+ax.set_title('3D-coordinate Scatter Plot')
 
 
 
