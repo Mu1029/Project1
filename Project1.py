@@ -8,10 +8,13 @@ from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import accuracy_score, precision_score, f1_score, confusion_matrix
-from sklearn.metrics import mean_absolute_error, mean_squared_error
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+import joblib
 
 # dependant variable is the step #, independant variables are the coordinates (X,Y,Z)
+
+
+
 
 #  Step 1
 
@@ -19,6 +22,8 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error
 
 data = 'Project 1 Data.csv'
 df = pd.read_csv(data)
+
+
 
 
 #  Step 2
@@ -87,6 +92,8 @@ ax.set_title('3D-coordinate Scatter Plot')
 #plt.figure()
 
 
+
+
 #  Step 3
 
     # train/test 80/20 data split and randomization
@@ -122,6 +129,8 @@ X_matrix_train = X_matrix_train.drop(columns=['X'])
 
 print(full_train_matrix)
 print(full_test_matrix)
+
+
 
 
 #  Step 4 
@@ -187,6 +196,8 @@ print("\nBest Hyperparameters (RF): ", best_hyperparams_rf)
 print("Best Model (RF): \n", best_model_3)
 
 
+
+
 #  Step 5
 
     # Metrics
@@ -214,4 +225,43 @@ print("Mean Square Error (Model 2): ", mse2)
 
 mse3 = mean_squared_error(y_test, y_pred3)
 print("Mean Square Error (Model 3): ", mse3)
+
+
+r2score1 = r2_score(y_test, y_pred1)
+print("\nR2 Score (Model 1): ", r2score1)
+
+r2score2 = r2_score(y_test, y_pred2)
+print("\nR2 Score (Model 1): ", r2score2)
+
+r2score3 = r2_score(y_test, y_pred3)
+print("\nR2 Score (Model 1): ", r2score3)
+
+
+
+
+# Step 6
+
+    # saving model 3 (RF) using joblib
+
+RF_model_file = "model_3.joblib"
+
+joblib.dump(model_3, RF_model_file)
+
+loaded_RFmodel = joblib.load(RF_model_file)
+
+    # prediction using provided dataset
+    
+new_data = [[9.375, 3.0625, 1.51],
+        [6.995, 5.125, 0.3875],
+        [0, 3.0625, 1.93],
+        [9.4, 3, 1.8],
+        [9.4, 3, 1.3]]
+
+
+new_df = pd.DataFrame(new_data, columns=['X', 'Y', 'Z'])
+
+predictions = loaded_RFmodel.predict(new_df)
+int_step_predictions = [int(round(value)) for value in predictions]
+print("Predicted Maintenance Steps:", int_step_predictions)
+
 
