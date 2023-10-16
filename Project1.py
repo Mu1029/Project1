@@ -6,8 +6,8 @@ import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
-from sklearn.ensemble import RandomForestClassifier
-
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import GridSearchCV
 
 
 # dependant variable is the step #, independant variables are the coordinates (X,Y,Z)
@@ -127,40 +127,63 @@ print(full_test_matrix)
 
     # model training (3 models)
   
-model_1a = LinearRegression()
-model_1a.fit(X_matrix_train, y_train)
-
-y_col = X_matrix_train[['Y']]
-z_col_train = X_matrix_train[['Z']]
-
 model_1 = LinearRegression()
-model_1.fit(z_col_train, y_train)
+model_1.fit(X_matrix_train, y_train)
 
-slope = model_1.coef_[0]
-intercept = model_1.intercept_
+param_grid_lr = {
+    'fit_intercept': [True, False],
+    'copy_X': [True, False],
+    'positive': [True, False],
+}
 
-plt.scatter(z_col_train, y_train, label='Training Data')
-plt.plot(z_col_train, model_1.predict(z_col_train), color='red', label='Linear Regression Line')
-plt.xlabel('Z')
-plt.ylabel('Step')
-plt.title('Linear Regression Model')
-plt.legend()
-plt.grid()
-plt.show() 
+grid_search_lr = GridSearchCV(model_1, param_grid_lr, cv=5, scoring='neg_mean_absolute_error', n_jobs=-1)
+grid_search_lr.fit(X_matrix_train, y_train)
 
-z_col_test = X_matrix_test[['Z']]
-predicted_y = model_1.predict(z_col_test)
-print(f'Predicted y for X = 0.5: {predicted_y[0][0]}')
+best_hyperparams_lr = grid_search_lr.best_params_
+best_model_1 = grid_search_lr.best_estimator_
 
-model_2 = DecisionTreeRegressor()
+print("\nBest Hyperparameters (LR): \n", best_hyperparams_lr)
+print("Best Model (LR): \n", best_model_1)
+
+
+model_2 = DecisionTreeRegressor(random_state=30)
 model_2.fit(X_matrix_train, y_train)
-  
-model_3 = RandomForestClassifier()
+
+param_grid_dt = {
+    'max_depth': [None, 5, 10, 15],
+    'min_samples_split': [2, 5, 10],
+    'min_samples_leaf': [1, 2, 4],
+    'max_features': ['sqrt', 'log2'],
+}
+
+grid_search_dt = GridSearchCV(model_2, param_grid_dt, cv=5, scoring='neg_mean_absolute_error', n_jobs=-1)
+grid_search_dt.fit(X_matrix_train, y_train)
+
+best_hyperparams_dt = grid_search_dt.best_params_
+best_model_2 = grid_search_dt.best_estimator_
+
+print("\nBest Hyperparameters (DT): \n", best_hyperparams_dt)
+print("Best Model (DT): \n", best_model_2)
+
+model_3 = RandomForestRegressor(random_state=30)
 model_3.fit(X_matrix_train, y_train)
 
+param_grid_rf = {
+   'n_estimators': [100, 200, 300],
+   'max_depth': [None, 10, 20, 30],
+   'min_samples_split': [2, 5, 10],
+   'min_samples_leaf': [1, 2, 4],
+   'max_features': ['sqrt', 'log2']
+}
 
+grid_search_rf = GridSearchCV(model_3, param_grid_rf, cv=5, scoring='neg_mean_absolute_error', n_jobs=-1)
+grid_search_rf.fit(X_matrix_train, y_train)
 
+best_hyperparams_rf = grid_search_rf.best_params_
+best_model_3 = grid_search_rf.best_estimator_
 
+print("\nBest Hyperparameters (RF): ", best_hyperparams_rf)
+print("Best Model (RF): \n", best_model_3)
 
 
 
@@ -168,71 +191,3 @@ model_3.fit(X_matrix_train, y_train)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Step 4
-
- # train/test 80/20 data split
-
-# X_matrix = df[['X', 'Y', 'Z']]
-# y = df['Step']
-
-# X_matrix_train, X_matrix_test, y_train, y_test = train_test_split(X_matrix, y, test_size=0.2, random_state=30)
-
-# print('\n', X_matrix_train,'\n')
-# print(X_matrix_test,'\n')
-# print(y_train,'\n')
-# print(y_test)
-
-
-
-
-
-
-
-
-# talk about what was found here ^
