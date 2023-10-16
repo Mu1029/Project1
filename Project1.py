@@ -8,7 +8,8 @@ from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import GridSearchCV
-
+from sklearn.metrics import accuracy_score, precision_score, f1_score, confusion_matrix
+from sklearn.metrics import mean_absolute_error, mean_squared_error
 
 # dependant variable is the step #, independant variables are the coordinates (X,Y,Z)
 
@@ -186,8 +187,31 @@ print("\nBest Hyperparameters (RF): ", best_hyperparams_rf)
 print("Best Model (RF): \n", best_model_3)
 
 
+#  Step 5
+
+    # Metrics
+    
+y_pred1 = model_1.predict(X_matrix_test)
+y_pred2 = model_2.predict(X_matrix_test)
+y_pred3 = model_3.predict(X_matrix_test)
 
 
+mae1 = mean_absolute_error(y_test, y_pred1)
+print("\nMean Absolute Error (Model 1): ", mae1)
+
+mae2 = mean_absolute_error(y_test, y_pred2)
+print("Mean Absolute Error (Model 2): ", mae2)
+
+mae3 = mean_absolute_error(y_test, y_pred3)
+print("Mean Absolute Error (Model 3): ", mae3)
 
 
+mse1 = mean_squared_error(y_test, y_pred1)
+print("\nMean Square Error (Model 1): ", mse1)
+
+mse2 = mean_squared_error(y_test, y_pred2)
+print("Mean Square Error (Model 2): ", mse2)
+
+mse3 = mean_squared_error(y_test, y_pred3)
+print("Mean Square Error (Model 3): ", mse3)
 
