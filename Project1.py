@@ -13,9 +13,6 @@ import joblib
 
 # dependant variable is the step #, independant variables are the coordinates (X,Y,Z)
 
-
-
-
 #  Step 1
 
     # reading csv data file
@@ -249,14 +246,13 @@ joblib.dump(model_3, RF_model_file)
 
 loaded_RFmodel = joblib.load(RF_model_file)
 
-    # prediction using provided dataset
+    # prediction using new provided dataset
     
 new_data = [[9.375, 3.0625, 1.51],
         [6.995, 5.125, 0.3875],
         [0, 3.0625, 1.93],
         [9.4, 3, 1.8],
         [9.4, 3, 1.3]]
-
 
 new_df = pd.DataFrame(new_data, columns=['X', 'Y', 'Z'])
 
